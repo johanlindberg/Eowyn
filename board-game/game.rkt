@@ -1,29 +1,20 @@
 #lang racket/gui
 
+;; Some global data
+(define number-of-players-list (list "2" "3" "4" "5"))
+(define player-colors (list "yellow" "orange" "green" "blue" "violet"))
+
 ;; Draw functions
 (define (draw-players canvas dc)
   (send dc set-pen "black" 1 'solid)
 
-  ;; Player 1
-  (send dc set-brush "yellow" 'solid)
-  (send dc draw-ellipse 18 118 10 10)
-
-  ;; Player 2
-  (send dc set-brush "blue" 'solid)
-  (send dc draw-ellipse 18 138 10 10)
-  
-  ;; Player 3
-  (send dc set-brush "green" 'solid)
-  (send dc draw-ellipse 18 158 10 10)
-  
-  ;; Player 4
-  (send dc set-brush "orange" 'solid)
-  (send dc draw-ellipse 18 178 10 10)
-  
-  ;; Player 5
-  (send dc set-brush "violet" 'solid)
-  (send dc draw-ellipse 18 198 10 10))
-
+  (do ([y 118 (+ y 20)]
+       [count 0 (+ count 1)])
+    ((>= count (string->number
+                (list-ref number-of-players-list
+                          (send number-of-players get-selection)))))
+    (send dc set-brush (list-ref player-colors count) 'solid)
+    (send dc draw-ellipse 18 y 10 10)))
 
 (define (draw-board canvas dc)
           ;;; Draw the game board
@@ -104,9 +95,9 @@
 (define number-of-players (new choice%
                               [label "Players:"]
                               [parent button-panel]
-                              [choices (list "2"
-                                             "3"
-                                             "4"
-                                             "5")]))
+                              [callback 
+                               (lambda (choice event)
+                                 (send main-frame refresh))]
+                              [choices number-of-players-list]))
 
 (send main-frame show #t)
