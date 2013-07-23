@@ -1,9 +1,14 @@
 #lang racket/gui
 
-(define main-frame (new frame% [label "Eowyn's board-game"] [width 500] [height 420]))
+(define main-frame (new frame%
+                        [label "Eowyn's board-game"]
+                        [width 500]
+                        [height 420]))
 (define main-frame-canvas
   (new canvas%
        [parent main-frame]
+       [min-width 500]
+       [min-height 420]
        [paint-callback
         (lambda (canvas dc)
           ;;; Draw the game board
@@ -61,5 +66,14 @@
 
           (send dc draw-ellipse 284 108 40 40)
           (send dc draw-ellipse 396 88 40 40))]))
+
+(define button-panel (new horizontal-panel%
+                          [parent main-frame]))
+(define start-button (new button%
+                          [label "Start"]
+                          [parent button-panel]))
+(define quit-button (new button%
+                         [label "Quit"]
+                         [parent button-panel]))
 
 (send main-frame show #t)
