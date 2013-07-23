@@ -46,7 +46,7 @@
           (send dc draw-ellipse 88 225 40 40)
           (send dc draw-ellipse 85 264 40 40)          
           (send dc draw-ellipse 120 280 40 40)
-          (send dc draw-ellipse 195 280 40 40)
+          (send dc draw-ellipse 195 294 40 40)
           (send dc draw-ellipse 233 305 40 40)
           (send dc draw-ellipse 309 300 40 40)
           (send dc draw-ellipse 334 270 40 40)
@@ -59,7 +59,7 @@
           (send dc set-brush "red" 'solid)
 
           (send dc draw-ellipse 131 125 40 40)
-          (send dc draw-ellipse 127 230 40 40)
+          (send dc draw-ellipse 127 220 40 40)
           (send dc draw-ellipse 157 290 40 40)
           (send dc draw-ellipse 271 305 40 40)
           (send dc draw-ellipse 345 232 40 40)
@@ -72,8 +72,12 @@
 (define start-button (new button%
                           [label "Start"]
                           [parent button-panel]))
-(define quit-button (new button%
-                         [label "Quit"]
-                         [parent button-panel]))
+(define number-of-players (new choice%
+                              [label "Players:"]
+                              [parent button-panel]
+                              [choices (list "2"
+                                             "3"
+                                             "4"
+                                             "5")]))
 
 (send main-frame show #t)
