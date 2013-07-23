@@ -1,16 +1,10 @@
 #lang racket/gui
 
-(define main-frame (new frame%
-                        [label "Eowyn's board-game"]
-                        [width 500]
-                        [height 420]))
-(define main-frame-canvas
-  (new canvas%
-       [parent main-frame]
-       [min-width 500]
-       [min-height 420]
-       [paint-callback
-        (lambda (canvas dc)
+;; Draw functions
+(define (draw-players canvas dc)
+  #t)
+
+(define (draw-board canvas dc)
           ;;; Draw the game board
           ;;; This is more or less a direct translation of a drawing.
           
@@ -65,7 +59,21 @@
           (send dc draw-ellipse 345 232 40 40)
 
           (send dc draw-ellipse 284 108 40 40)
-          (send dc draw-ellipse 396 88 40 40))]))
+          (send dc draw-ellipse 396 88 40 40))
+
+(define main-frame (new frame%
+                        [label "Eowyn's board-game"]
+                        [width 500]
+                        [height 420]))
+(define main-frame-canvas
+  (new canvas%
+       [parent main-frame]
+       [min-width 500]
+       [min-height 420]
+       [paint-callback
+        (lambda (canvas dc)
+          (draw-board canvas dc)
+          (draw-players canvas dc))]))
 
 (define button-panel (new horizontal-panel%
                           [parent main-frame]))
