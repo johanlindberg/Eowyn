@@ -6,6 +6,10 @@
 
 (define current-player 1)
 
+;; Current status
+(define (get-current-status-label)
+  (string-append "Player " (number->string current-player) "'s turn"))
+
 ;; Draw functions
 (define (draw-players canvas dc)
   (send dc set-pen "black" 1 'solid)
@@ -105,8 +109,8 @@
                                (lambda (choice event)
                                  (send main-frame refresh))]
                               [choices number-of-players-list]))
-(define current-player-label (new message%
-                                  [label (string-append "Player " (number->string current-player))]
+(define current-status-label (new message%
+                                  [label (get-current-status-label)]
                                   [parent bottom-panel]))
 
 (send main-frame show #t)
