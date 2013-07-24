@@ -4,6 +4,8 @@
 (define number-of-players-list (list "2" "3" "4" "5"))
 (define player-colors (list "yellow" "orange" "green" "blue" "violet"))
 
+(define current-player 1)
+
 ;; Draw functions
 (define (draw-players canvas dc)
   (send dc set-pen "black" 1 'solid)
@@ -73,10 +75,13 @@
           (send dc draw-ellipse 284 108 40 40)
           (send dc draw-ellipse 396 88 40 40))
 
+;;; GUI definition
+;;; --------------
 (define main-frame (new frame%
                         [label "Eowyn's board-game"]
                         [width 500]
                         [height 420]))
+;; Game board
 (define main-frame-canvas
   (new canvas%
        [parent main-frame]
@@ -87,17 +92,21 @@
           (draw-board canvas dc)
           (draw-players canvas dc))]))
 
-(define button-panel (new horizontal-panel%
+;; Bottom panel
+(define bottom-panel (new horizontal-panel%
                           [parent main-frame]))
 (define start-button (new button%
                           [label "Start"]
-                          [parent button-panel]))
+                          [parent bottom-panel]))
 (define number-of-players (new choice%
                               [label "Players:"]
-                              [parent button-panel]
+                              [parent bottom-panel]
                               [callback 
                                (lambda (choice event)
                                  (send main-frame refresh))]
                               [choices number-of-players-list]))
+(define current-player-label (new message%
+                                  [label (string-append "Player " (number->string current-player))]
+                                  [parent bottom-panel]))
 
 (send main-frame show #t)
