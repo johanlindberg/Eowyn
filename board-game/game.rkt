@@ -51,9 +51,12 @@
 
 ;; Current status
 (define (get-current-status-label)
-  (if started?
-      (string-append "Player " (number->string current-player) "'s turn")
-      "Press start to begin"))
+  (if (= state 2)
+      (begin ; Results
+        (string-append "Player " (number->string current-player) " wins!"))
+      (if started?
+          (string-append "Player " (number->string current-player) "'s turn")
+          "Press start to begin")))
 
 ;; Draw functions
 (define (draw-players canvas dc)
