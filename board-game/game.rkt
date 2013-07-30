@@ -4,7 +4,15 @@
 (define number-of-players-list (list "2" "3" "4" "5"))
 (define player-colors (list "yellow" "orange" "green" "blue" "violet"))
 
+;; Game state
+(define started? #f)
 (define current-player 1)
+
+(define state 0)
+(define states
+  (list "roll"
+        "move"
+        "result"))
 
 ;; A list of nodes where each node is := (index stone? goal? (x y) (next))
 (define path 
@@ -43,7 +51,9 @@
 
 ;; Current status
 (define (get-current-status-label)
-  (string-append "Player " (number->string current-player) "'s turn"))
+  (if started?
+      (string-append "Player " (number->string current-player) "'s turn")
+      "Press start to begin"))
 
 ;; Draw functions
 (define (draw-players canvas dc)
@@ -73,7 +83,7 @@
 
   (for ([node path])
     ; node := (index stone? goal? (x y) (next))
-    (if (second node)
+    (if (second node) ; stone?
         (send dc set-brush "red" 'solid)
         (send dc set-brush "white" 'transparent))
     
@@ -104,7 +114,20 @@
                           [parent main-frame]))
 (define start-button (new button%
                           [label "Start"]
-                          [parent bottom-panel]))
+                          [parent bottom-panel]
+                          [callback
+                           (lambda (button event)
+                             (if started?
+                                 (begin ; Quit
+                                   (set! started? #f)
+                                   (set! state 2) ; Result
+                                   (send current-status-label set-label (get-current-status-label))
+                                   (send start-button set-label "Start"))
+                                 (begin ; Start
+                                   (set! started? #t)
+                                   (set! state 0)
+                                   (send current-status-label set-label (get-current-status-label))
+                                   (send start-button set-label "Quit"))))]))
 (define number-of-players (new choice%
                               [label "Players:"]
                               [parent bottom-panel]
@@ -116,7 +139,7 @@
                                   [label (get-current-status-label)]
                                   [parent bottom-panel]))
 (define die (new button%
-                 [label "Push me!"]
+                 [label (number->string (+ (random 6) 1))]
                  [parent bottom-panel]
                  [callback
                   (lambda (button event)
