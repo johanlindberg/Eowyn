@@ -125,12 +125,14 @@
                                    (set! started? #f)
                                    (set! state 2) ; Result
                                    (send number-of-players enable #t)
+                                   (send die enable #f)
                                    (send current-status-label set-label (get-current-status-label))
                                    (send start-button set-label "Start"))
                                  (begin ; Start
                                    (set! started? #t)
                                    (set! state 0)
                                    (send number-of-players enable #f)
+                                   (send die enable #t)
                                    (send current-status-label set-label (get-current-status-label))
                                    (send start-button set-label "Quit"))))]))
 (define number-of-players (new choice%
@@ -146,6 +148,7 @@
 (define die (new button%
                  [label (number->string (+ (random 6) 1))]
                  [parent bottom-panel]
+                 [enabled #f]
                  [callback
                   (lambda (button event)
                     (send die set-label (number->string (+ (random 6) 1))))]))
