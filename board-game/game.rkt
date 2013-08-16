@@ -70,10 +70,37 @@
     (send dc set-brush (list-ref player-colors count) 'solid)
     (send dc draw-ellipse 18 y 10 10)))
 
+(define (hexagon-path size x y)
+  (let ([path (new dc-path%)])
+    (send path move-to (+ x (* 0.87 size)) (+ y (* 0.5 size)))
+    (send path line-to x (+ y size))
+    (send path line-to (+ x (* -0.87 size)) (+ y (* 0.5 size)))
+    (send path line-to (+ x (* -0.87 size)) (+ y (* -0.5 size)))
+    (send path line-to x (- y size))
+    (send path line-to (+ x (* 0.87 size)) (+ y (* -0.5 size)))
+    (send path close)
+    
+    path))
+
 (define (draw-board canvas dc)
-  (send dc set-pen "black" 3 'solid)
+  (send dc set-pen "black" 1 'solid)
   (send dc set-brush "white" 'transparent)
 
+  (let ([size 25])
+    (do ([x 0 (+ x (* 2 size 0.87))])
+	((> x (send canvas get-width)))
+
+      (do ([y (* 1.75 size 0.87) (+ y (* 3 size))])
+	  ((> y (send canvas get-height)))
+	(send dc draw-path (hexagon-path size x y)))
+
+      (do ([y 0 (+ y (* 3 size))])
+	  ((> y (send canvas get-height)))        
+        (send dc draw-path (hexagon-path size (+ x (* size 0.87)) y)))))
+  
+  (send dc set-pen "black" 3 'solid)
+  (send dc set-brush "white" 'transparent)
+  
   ;; Start arrow
   (send dc draw-line 33 123 53 123)
   (send dc draw-line 43 118 53 123)
