@@ -86,41 +86,36 @@
   (send dc set-pen "black" 1 'solid)
   (send dc set-brush "white" 'transparent)
 
-  (let ([size 25])
+  ;; Draw hexagon board
+  (let ([size 25]
+	[path '(13 25 44 50 45 62 21 15 22 46 52 76 82 68 85 91 103 104 105 93 110 122)] ; gray
+	[path-stones '(32 33 34 64 80 87 109)] ; red
+	[i 0])
     (do ([x 0 (+ x (* 2 size 0.87))])
 	((> x (send canvas get-width)))
 
       (do ([y (* 1.75 size 0.87) (+ y (* 3 size))])
 	  ((> y (send canvas get-height)))
-	(send dc draw-path (hexagon-path size x y)))
+	(if (member i path)
+	    (send dc set-brush "gray" 'solid)
+	    (if (member i path-stones)
+		(send dc set-brush "red" 'solid)
+		(send dc set-brush "white" 'transparent)))
+	(send dc draw-path (hexagon-path size x y))
+	(set! i (+ i 1)))
 
       (do ([y 0 (+ y (* 3 size))])
-	  ((> y (send canvas get-height)))        
-        (send dc draw-path (hexagon-path size (+ x (* size 0.87)) y)))))
-  
-  (send dc set-pen "black" 3 'solid)
-  (send dc set-brush "white" 'transparent)
-  
-  ;; Start arrow
-  (send dc draw-line 33 123 53 123)
-  (send dc draw-line 43 118 53 123)
-  (send dc draw-line 43 128 53 123)
-          
-  ;; Goal arrow
-  (send dc draw-line 442 181 462 181)
-  (send dc draw-line 452 176 462 181)
-  (send dc draw-line 452 186 462 181)
+	  ((> y (send canvas get-height)))
+	(if (member i path)
+	    (send dc set-brush "gray" 'solid)
+	    (if (member i path-stones)
+		(send dc set-brush "red" 'solid)
+		(send dc set-brush "white" 'transparent)))
+        (send dc draw-path (hexagon-path size (+ x (* size 0.87)) y))
+	(set! i (+ i 1)))))
 
-  (for ([node path])
-    ; node := (index stone? goal? (x y) (next))
-    (if (second node) ; stone?
-        (send dc set-brush "red" 'solid)
-        (send dc set-brush "white" 'transparent))
-    
-    (send dc draw-ellipse
-          (first (fourth node))  ; x
-          (second (fourth node)) ; y
-          40 40)))
+  (send dc set-pen "black" 3 'solid)
+  (send dc set-brush "white" 'transparent))
 
 ;;; GUI definition
 ;;; --------------
