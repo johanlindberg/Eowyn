@@ -167,12 +167,21 @@
 (define current-status-label (new message%
                                   [label (get-current-status-label)]
                                   [parent bottom-panel]))
+
+(define die-faces (list (read-bitmap "dice1.png")
+			(read-bitmap "dice2.png")
+			(read-bitmap "dice3.png")
+			(read-bitmap "dice4.png")
+			(read-bitmap "dice5.png")
+			(read-bitmap "dice6.png")))
+
 (define die (new button%
-                 [label (number->string (+ (random 6) 1))]
+                 [label (list-ref die-faces (random 6))]
                  [parent bottom-panel]
+		 
                  [enabled #f]
                  [callback
                   (lambda (button event)
-                    (send die set-label (number->string (+ (random 6) 1))))]))
+                    (send die set-label (list-ref die-faces (random 6))))]))
 
 (send main-frame show #t)
