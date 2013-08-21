@@ -2,7 +2,6 @@
 
 ;; Some global data
 (define number-of-players-list (list "2" "3" "4" "5"))
-(define player-colors (list "yellow" "orange" "green" "blue" "violet"))
 
 ;; Game state
 (define started? #f)
@@ -59,16 +58,26 @@
           "Press start to begin")))
 
 ;; Draw functions
+;; --------------
+
+(define index->coords (make-hash))
+
 (define (draw-players canvas dc)
   (send dc set-pen "black" 1 'solid)
 
-  (do ([y 118 (+ y 20)]
-       [count 0 (+ count 1)])
-    ((>= count (string->number
-                (list-ref number-of-players-list
-                          (send number-of-players get-selection)))))
-    (send dc set-brush (list-ref player-colors count) 'solid)
-    (send dc draw-ellipse 18 y 10 10)))
+  (let ([coord (hash-ref index->coords 13)]
+	[player-colors '("yellow" "orange" "green" "blue" "violet")]
+	[player-pos '((0 0) (-10 -10) (0 20) (20 0) (0 -20))])
+    (let ([x (first coord)]
+	  [y (second coord)])
+      (do ([count 0 (+ count 1)])
+	  ((>= count (string->number
+		      (list-ref number-of-players-list
+				(send number-of-players get-selection)))))
+	(set! x (+ x (first (list-ref player-pos count))))
+	(set! y (+ y (second (list-ref player-pos count))))
+	(send dc set-brush (list-ref player-colors count) 'solid)
+	(send dc draw-ellipse (- x 5) (- y 5) 10 10)))))
 
 (define (hexagon-path size x y)
   (let ([path (new dc-path%)])
@@ -102,6 +111,7 @@
 		(send dc set-brush "red" 'solid)
 		(send dc set-brush "white" 'transparent)))
 	(send dc draw-path (hexagon-path size x y))
+	(hash-set! index->coords i (list x y))
 	(set! i (+ i 1)))
 
       (do ([y 0 (+ y (* 3 size))])
@@ -112,6 +122,7 @@
 		(send dc set-brush "red" 'solid)
 		(send dc set-brush "white" 'transparent)))
         (send dc draw-path (hexagon-path size (+ x (* size 0.87)) y))
+	(hash-set! index->coords i (list x y))
 	(set! i (+ i 1)))))
 
   (send dc set-pen "black" 3 'solid)
